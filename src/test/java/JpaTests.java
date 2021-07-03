@@ -3,6 +3,8 @@ import enums.AccountType;
 import enums.AuctionType;
 import enums.CurrencyUnit;
 import model.Address;
+import model.Billing.BankAccount;
+import model.Billing.CreditCard;
 import model.Item;
 import model.MonetaryAmount;
 import model.User;
@@ -14,6 +16,32 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class JpaTests {
+
+    @Test
+    public void testBillingDetails() {
+        EntityManager entityManager = JpaConfig.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = entityManager.getTransaction();
+        tx.begin();
+
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setAccount("account-1");
+        bankAccount.setSwift("00009999");
+        bankAccount.setOwner("User-1");
+        bankAccount.setBankname("BaroBank");
+        entityManager.persist(bankAccount);
+
+        CreditCard creditCard = new CreditCard();
+        creditCard.setCardNumber("55559999");
+        creditCard.setExpMonth("03");
+        creditCard.setExpYear("2023");
+        creditCard.setOwner("User-2");
+        entityManager.persist(creditCard);
+
+        tx.commit();
+        entityManager.close();
+        JpaConfig.getEntityManagerFactory().close();
+    }
+
 
     @Test
     public void testItemAdd() {
